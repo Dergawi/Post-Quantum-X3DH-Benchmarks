@@ -1,0 +1,3 @@
+KEM,White Noise,Protocol Setup,Long term key,One time key,Initiate,Responder,Hole protocol
+Kyber512,640,583787,18072181,19044918,1187993,566061,33358667
+Kyber512-90s,509,464185,17915311,20836380,835350,468609,35292310

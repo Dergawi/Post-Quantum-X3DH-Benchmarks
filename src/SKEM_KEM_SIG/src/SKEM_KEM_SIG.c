@@ -22,9 +22,10 @@ int main(int argc, char const *argv[]) {
 
     FILE *fpt;
 
-    snprintf(buf, sizeof(buf),
-             "../results/SKEM_KEM_SIG/mean_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
-             requested_NIST_security_level);
+    snprintf(
+        buf, sizeof(buf),
+        "../results/SKEM_KEM_SIG/mean_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
+        requested_NIST_security_level);
     fpt = fopen(buf, "w");
     fclose(fpt);
 
@@ -34,7 +35,8 @@ int main(int argc, char const *argv[]) {
     fclose(fpt);
 
     snprintf(buf, sizeof(buf),
-             "../results/SKEM_KEM_SIG/variance_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
+             "../results/SKEM_KEM_SIG/"
+             "variance_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
              requested_NIST_security_level);
     fpt = fopen(buf, "w");
     fclose(fpt);
@@ -44,25 +46,27 @@ int main(int argc, char const *argv[]) {
                  "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
-    snprintf(buf, sizeof(buf),
-             "../results/SKEM_KEM_SIG/stored_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
-             requested_NIST_security_level);
+    snprintf(
+        buf, sizeof(buf),
+        "../results/SKEM_KEM_SIG/stored_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
+        requested_NIST_security_level);
     fpt = fopen(buf, "w");
     fclose(fpt);
 
     fpt = fopen(buf, "a");
-    fprintf(fpt, "KEM,White Noise,Protocol Setup,Long term key,One time "
+    fprintf(fpt, "KEM,Long term key,One time "
                  "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
-    snprintf(buf, sizeof(buf),
-             "../results/SKEM_KEM_SIG/sent_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
-             requested_NIST_security_level);
+    snprintf(
+        buf, sizeof(buf),
+        "../results/SKEM_KEM_SIG/sent_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
+        requested_NIST_security_level);
     fpt = fopen(buf, "w");
     fclose(fpt);
 
     fpt = fopen(buf, "a");
-    fprintf(fpt, "KEM,White Noise,Protocol Setup,Long term key,One time "
+    fprintf(fpt, "KEM,Long term key,One time "
                  "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
@@ -127,17 +131,14 @@ int main(int argc, char const *argv[]) {
                 printf("\" (NIST security level of %d)\n",
                        get_NIST_security_level_KEM(get_name_KEM(i)));
 
-                int p = 0;
                 while (is_done(&benchmark_variables_white_noise) *
-                               is_done(&benchmark_variables_initiate_protocol) *
-                               is_done(&benchmark_variables_long_term_key) *
-                               is_done(&benchmark_variables_one_time_key) *
-                               is_done(&benchmark_variables_initiate) *
-                               is_done(&benchmark_variables_responder) *
-                               is_done(&benchmark_variables_protocol) ==
-                           0 &&
-                       p == 0) {
-                    p++;
+                           is_done(&benchmark_variables_initiate_protocol) *
+                           is_done(&benchmark_variables_long_term_key) *
+                           is_done(&benchmark_variables_one_time_key) *
+                           is_done(&benchmark_variables_initiate) *
+                           is_done(&benchmark_variables_responder) *
+                           is_done(&benchmark_variables_protocol) ==
+                       0) {
                     long_term_public_key long_term_public_key_initiator;
                     one_time_public_key one_time_public_key_initiator;
                     long_term_public_key long_term_public_key_responder;
@@ -221,6 +222,7 @@ int main(int argc, char const *argv[]) {
                                         &benchmark_variables_initiate);
                                     if (initiator(
                                             &one_time_secret_key_initiator,
+                                            &long_term_public_key_initiator,
                                             &one_time_public_key_initiator,
                                             &long_term_public_key_responder,
                                             &one_time_public_key_responder,
@@ -254,7 +256,9 @@ int main(int argc, char const *argv[]) {
                                         if (responder(
                                                 &long_term_secret_key_responder,
                                                 &one_time_secret_key_responder,
+                                                &long_term_public_key_initiator,
                                                 &one_time_public_key_initiator,
+                                                &long_term_public_key_responder,
                                                 &one_time_public_key_responder,
                                                 &ciphertext_1, &ciphertext_2,
                                                 &ciphertext_3,
@@ -392,10 +396,10 @@ int main(int argc, char const *argv[]) {
                        hole_protocol_sent_data_size);
                 printf("\n");
 
-                snprintf(
-                    buf, sizeof(buf),
-                    "../results/SKEM_KEM_SIG/mean_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
-                    requested_NIST_security_level);
+                snprintf(buf, sizeof(buf),
+                         "../results/SKEM_KEM_SIG/"
+                         "mean_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
+                         requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
                 k = 0;
@@ -422,10 +426,10 @@ int main(int argc, char const *argv[]) {
 
                 fclose(fpt);
 
-                snprintf(
-                    buf, sizeof(buf),
-                    "../results/SKEM_KEM_SIG/variance_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
-                    requested_NIST_security_level);
+                snprintf(buf, sizeof(buf),
+                         "../results/SKEM_KEM_SIG/"
+                         "variance_cycles_SKEM_KEM_SIG_NIST_level_%d.csv",
+                         requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
                 k = 0;
@@ -452,34 +456,9 @@ int main(int argc, char const *argv[]) {
 
                 fclose(fpt);
 
-                snprintf(
-                    buf, sizeof(buf),
-                    "../results/SKEM_KEM_SIG/stored_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
-                    requested_NIST_security_level);
-                fpt = fopen(buf, "a");
-
-                k = 0;
-                while (get_name_KEM(i)[k] != '\0') {
-                    fprintf(fpt, "%c", get_name_KEM(i)[k]);
-                    ++k;
-                }
-                fprintf(fpt, " + ");
-                k = 0;
-                while (get_name_SIG(j)[k] != '\0') {
-                    fprintf(fpt, "%c", get_name_SIG(j)[k]);
-                    ++k;
-                }
-                fprintf(fpt, ",");
-
-                fprintf(
-                    fpt, "%d,%d,%d,%d,%d,0,0\n", long_term_key_stored_data_size,
-                    one_time_key_stored_data_size, initiator_stored_data_size,
-                    responder_stored_data_size, hole_protocol_stored_data_size);
-
-                fclose(fpt);
-
                 snprintf(buf, sizeof(buf),
-                         "../results/SKEM_KEM_SIG/sent_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
+                         "../results/SKEM_KEM_SIG/"
+                         "stored_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
                          requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
@@ -496,8 +475,33 @@ int main(int argc, char const *argv[]) {
                 }
                 fprintf(fpt, ",");
 
-                fprintf(fpt, "%d,%d,%d,%d,%d,0,0\n",
-                        long_term_key_sent_data_size,
+                fprintf(fpt, "%d,%d,%d,%d,%d\n", long_term_key_stored_data_size,
+                        one_time_key_stored_data_size,
+                        initiator_stored_data_size, responder_stored_data_size,
+                        hole_protocol_stored_data_size);
+
+                fclose(fpt);
+
+                snprintf(buf, sizeof(buf),
+                         "../results/SKEM_KEM_SIG/"
+                         "sent_bytes_SKEM_KEM_SIG_NIST_level_%d.csv",
+                         requested_NIST_security_level);
+                fpt = fopen(buf, "a");
+
+                k = 0;
+                while (get_name_KEM(i)[k] != '\0') {
+                    fprintf(fpt, "%c", get_name_KEM(i)[k]);
+                    ++k;
+                }
+                fprintf(fpt, " + ");
+                k = 0;
+                while (get_name_SIG(j)[k] != '\0') {
+                    fprintf(fpt, "%c", get_name_SIG(j)[k]);
+                    ++k;
+                }
+                fprintf(fpt, ",");
+
+                fprintf(fpt, "%d,%d,%d,%d,%d\n", long_term_key_sent_data_size,
                         one_time_key_sent_data_size, initiator_sent_data_size,
                         responder_sent_data_size, hole_protocol_sent_data_size);
 

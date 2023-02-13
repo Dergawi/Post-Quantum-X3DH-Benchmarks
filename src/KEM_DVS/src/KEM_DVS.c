@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]) {
 
     fpt = fopen(buf, "a");
     fprintf(fpt,
-            "KEM,White Noise,Protocol Setup,Long term key,Static key,One time "
+            "KEM,Long term key,Static key,One time "
             "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
@@ -74,7 +74,7 @@ int main(int argc, char const *argv[]) {
 
     fpt = fopen(buf, "a");
     fprintf(fpt,
-            "KEM,White Noise,Protocol Setup,Long term key,Static key,One time "
+            "KEM,Long term key,Static key,One time "
             "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
@@ -82,12 +82,6 @@ int main(int argc, char const *argv[]) {
     reset_benchmark_variables(&benchmark_variables_white_noise);
     benchmark_variables benchmark_variables_initiate_protocol;
     reset_benchmark_variables(&benchmark_variables_initiate_protocol);
-    benchmark_variables benchmark_variables_DVS_key_gen;
-    reset_benchmark_variables(&benchmark_variables_DVS_key_gen);
-    benchmark_variables benchmark_variables_DVS_sign;
-    reset_benchmark_variables(&benchmark_variables_DVS_sign);
-    benchmark_variables benchmark_variables_DVS_verify;
-    reset_benchmark_variables(&benchmark_variables_DVS_verify);
 
     for (int i = 0; i < get_number_of_KEM(); i++) {
 
@@ -134,7 +128,6 @@ int main(int argc, char const *argv[]) {
             printf("\" (NIST security level of %d)\n",
                    get_NIST_security_level_KEM(get_name_KEM(i)));
 
-            int j = 0;
             while (is_done(&benchmark_variables_white_noise) *
                            is_done(&benchmark_variables_initiate_protocol) *
                            is_done(&benchmark_variables_long_term_key) *
@@ -142,13 +135,8 @@ int main(int argc, char const *argv[]) {
                            is_done(&benchmark_variables_one_time_key) *
                            is_done(&benchmark_variables_initiate) *
                            is_done(&benchmark_variables_responder) *
-                           is_done(&benchmark_variables_protocol) *
-                           is_done(&benchmark_variables_DVS_key_gen) *
-                           is_done(&benchmark_variables_DVS_sign) *
-                           is_done(&benchmark_variables_DVS_verify) ==
-                       0 &&
-                   j == 0) {
-                j++;
+                           is_done(&benchmark_variables_protocol) ==
+                       0) {
                 long_term_public_key long_term_public_key_initiator;
                 long_term_public_key long_term_public_key_responder;
                 static_public_key static_public_key_responder;
@@ -384,55 +372,55 @@ int main(int argc, char const *argv[]) {
                     }
                 }
             }
-            printf("white noise:        %15.0f mean cycles %15.0f cycles "
+            printf("white noise:        %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_white_noise),
                    get_variance(&benchmark_variables_white_noise));
-            printf("initiate_protocol:  %15.0f mean cycles %15.0f cycles "
+            printf("initiate_protocol:  %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_initiate_protocol),
                    get_variance(&benchmark_variables_initiate_protocol));
-            printf("long term key:      %15.0f mean cycles %15.0f cycles "
+            printf("long term key:      %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_long_term_key),
                    get_variance(&benchmark_variables_long_term_key));
-            printf("static_key:         %15.0f mean cycles %15.0f cycles "
+            printf("static_key:         %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_static_key),
                    get_variance(&benchmark_variables_static_key));
-            printf("one time key:       %15.0f mean cycles %15.0f cycles "
+            printf("one time key:       %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_one_time_key),
                    get_variance(&benchmark_variables_one_time_key));
-            printf("initiate:           %15.0f mean cycles %15.0f cycles "
+            printf("initiate:           %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_initiate),
                    get_variance(&benchmark_variables_initiate));
-            printf("responder:          %15.0f mean cycles %15.0f cycles "
+            printf("responder:          %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_responder),
                    get_variance(&benchmark_variables_responder));
-            printf("protocol:           %15.0f mean cycles %15.0f cycles "
+            printf("protocol:           %15.0f mean cycles  %15.0f cycles "
                    "variance\n",
                    get_mean(&benchmark_variables_protocol),
                    get_variance(&benchmark_variables_protocol));
-            printf("long term key:     %15.0d bytes stored %15.0d bytes "
+            printf("long term key:      %15.0d bytes stored %15.0d bytes "
                    "sent\n",
                    long_term_key_stored_data_size,
                    long_term_key_sent_data_size);
-            printf("static key key:    %15.0d bytes stored %15.0d bytes "
+            printf("static key key:     %15.0d bytes stored %15.0d bytes "
                    "sent\n",
                    static_key_stored_data_size, static_key_sent_data_size);
-            printf("one time key:      %15.0d bytes stored %15.0d bytes "
+            printf("one time key:       %15.0d bytes stored %15.0d bytes "
                    "sent\n",
                    one_time_key_stored_data_size, one_time_key_sent_data_size);
-            printf("initiate:          %15.0d bytes stored %15.0d bytes "
+            printf("initiate:           %15.0d bytes stored %15.0d bytes "
                    "sent\n",
                    initiator_stored_data_size, initiator_sent_data_size);
-            printf("responder:         %15.0d bytes stored %15.0d bytes "
+            printf("responder:          %15.0d bytes stored %15.0d bytes "
                    "sent\n",
                    responder_stored_data_size, responder_sent_data_size);
-            printf("protocol:          %15.0d bytes stored %15.0d bytes "
+            printf("protocol:           %15.0d bytes stored %15.0d bytes "
                    "sent\n",
                    hole_protocol_stored_data_size,
                    hole_protocol_sent_data_size);

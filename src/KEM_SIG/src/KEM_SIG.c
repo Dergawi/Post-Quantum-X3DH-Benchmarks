@@ -54,7 +54,7 @@ int main(int argc, char const *argv[]) {
 
     fpt = fopen(buf, "a");
     fprintf(fpt,
-            "KEM,White Noise,Protocol Setup,Long term key,Static key,One time "
+            "KEM,Long term key,Static key,One time "
             "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
@@ -66,7 +66,7 @@ int main(int argc, char const *argv[]) {
 
     fpt = fopen(buf, "a");
     fprintf(fpt,
-            "KEM,White Noise,Protocol Setup,Long term key,Static key,One time "
+            "KEM,Long term key,Static key,One time "
             "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 

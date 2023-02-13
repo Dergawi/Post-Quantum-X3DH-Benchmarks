@@ -22,7 +22,7 @@ $(OBJ_FILES)libProtocol.o: $(SRC_FILES)libProtocol.c
 sanitized: SKEM_KEM_SIG_sanitized
 
 SKEM_KEM_SIG_sanitized: $(SRC_FILES)SKEM_KEM_SIG.c $(SRC_FILES)libProtocol.c
-	$(CC_DEBUG) $(DEBUG_FLAG) -o $(EXE_FILES)$@ $^ $(LIBS)
+	$(CC_DEBUG) $(DEBUG_FLAG) -o $(TEST_FILES)$@ $^ $(LIBS)
 
 clean:
 	rm -rf $(OBJ_FILES)*.o

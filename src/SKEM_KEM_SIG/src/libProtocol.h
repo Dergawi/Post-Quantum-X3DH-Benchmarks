@@ -47,6 +47,7 @@ int one_time_key_gen(one_time_secret_key *one_time_secret_key,
                      one_time_public_key *one_time_public_key);
 
 int initiator(one_time_secret_key *one_time_secret_key_initiator,
+              long_term_public_key *long_term_public_key_initiator,
               one_time_public_key *one_time_public_key_initiator,
               long_term_public_key *long_term_public_key_responder,
               one_time_public_key *one_time_public_key_responder,
@@ -55,7 +56,9 @@ int initiator(one_time_secret_key *one_time_secret_key_initiator,
 
 int responder(long_term_secret_key *long_term_secret_key_responder,
               one_time_secret_key *one_time_secret_key_responder,
+              long_term_public_key *long_term_public_key_initiator,
               one_time_public_key *one_time_public_key_initiator,
+              long_term_public_key *long_term_public_key_responder,
               one_time_public_key *one_time_public_key_responder,
               ciphertext *ciphertext_1, ciphertext *ciphertext_2,
               ciphertext *ciphertext_3, size_t security_parameter);

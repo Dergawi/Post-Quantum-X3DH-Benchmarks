@@ -101,6 +101,7 @@ int one_time_key_gen(one_time_secret_key *one_time_secret_key,
 }
 
 int initiator(one_time_secret_key *one_time_secret_key_initiator,
+              long_term_public_key *long_term_public_key_initiator,
               one_time_public_key *one_time_public_key_initiator,
               long_term_public_key *long_term_public_key_responder,
               one_time_public_key *one_time_public_key_responder,
@@ -110,23 +111,25 @@ int initiator(one_time_secret_key *one_time_secret_key_initiator,
     uint8_t shared_key[security_parameter], pre_key[HASH_LENGTH];
     crypto_generichash_state hash_state;
     shared_secret shared_secret_1, shared_secret_2, shared_secret_3;
-    message message;
+    message signed_one_time_key;
+    message session_ID;
 
-    message.message_content = malloc(
+    signed_one_time_key.message_content = malloc(
         one_time_public_key_responder->public_key_SKEM->public_key_length +
         one_time_public_key_responder->public_key_KEM->public_key_length);
-    void *q = message.message_content;
+    void *q = signed_one_time_key.message_content;
     memcpy(q,
            one_time_public_key_responder->public_key_SKEM->public_key_content,
            one_time_public_key_responder->public_key_SKEM->public_key_length);
     q = q + one_time_public_key_responder->public_key_SKEM->public_key_length;
     memcpy(q, one_time_public_key_responder->public_key_KEM->public_key_content,
            one_time_public_key_responder->public_key_KEM->public_key_length);
-    message.message_length =
+    signed_one_time_key.message_length =
         one_time_public_key_responder->public_key_SKEM->public_key_length +
         one_time_public_key_responder->public_key_KEM->public_key_length;
 
-    if (verify_SIG(long_term_public_key_responder->public_key_SIG, &message,
+    if (verify_SIG(long_term_public_key_responder->public_key_SIG,
+                   &signed_one_time_key,
                    one_time_public_key_responder->signature)) {
         fprintf(stderr, "ERROR: SIG failed! \n");
         return 1;
@@ -155,6 +158,60 @@ int initiator(one_time_secret_key *one_time_secret_key_initiator,
         return 3;
     }
 
+    session_ID.message_length =
+        long_term_public_key_initiator->public_key_length +
+        long_term_public_key_responder->public_key_length +
+        one_time_public_key_initiator->public_key_length +
+        one_time_public_key_responder->public_key_length +
+        ciphertext_1->ciphertext_length + ciphertext_2->ciphertext_length +
+        ciphertext_3->ciphertext_length;
+    session_ID.message_content = malloc(session_ID.message_length);
+    q = session_ID.message_content;
+    memcpy(q,
+           long_term_public_key_initiator->public_key_KEM->public_key_content,
+           long_term_public_key_initiator->public_key_KEM->public_key_length);
+    q = q + long_term_public_key_initiator->public_key_KEM->public_key_length;
+    memcpy(q,
+           long_term_public_key_initiator->public_key_SIG->public_key_content,
+           long_term_public_key_initiator->public_key_SIG->public_key_length);
+    q = q + long_term_public_key_initiator->public_key_SIG->public_key_length;
+    memcpy(q,
+           long_term_public_key_responder->public_key_KEM->public_key_content,
+           long_term_public_key_responder->public_key_KEM->public_key_length);
+    q = q + long_term_public_key_responder->public_key_KEM->public_key_length;
+    memcpy(q,
+           long_term_public_key_responder->public_key_SIG->public_key_content,
+           long_term_public_key_responder->public_key_SIG->public_key_length);
+    q = q + long_term_public_key_responder->public_key_SIG->public_key_length;
+    memcpy(q,
+           one_time_public_key_initiator->public_key_SKEM->public_key_content,
+           one_time_public_key_initiator->public_key_SKEM->public_key_length);
+    q = q + one_time_public_key_initiator->public_key_SKEM->public_key_length;
+    memcpy(q, one_time_public_key_initiator->public_key_KEM->public_key_content,
+           one_time_public_key_initiator->public_key_KEM->public_key_length);
+    q = q + one_time_public_key_initiator->public_key_KEM->public_key_length;
+    memcpy(q, one_time_public_key_initiator->signature->signature_content,
+           one_time_public_key_initiator->signature->signature_length);
+    q = q + one_time_public_key_initiator->signature->signature_length;
+    memcpy(q,
+           one_time_public_key_responder->public_key_SKEM->public_key_content,
+           one_time_public_key_responder->public_key_SKEM->public_key_length);
+    q = q + one_time_public_key_responder->public_key_SKEM->public_key_length;
+    memcpy(q, one_time_public_key_responder->public_key_KEM->public_key_content,
+           one_time_public_key_responder->public_key_KEM->public_key_length);
+    q = q + one_time_public_key_responder->public_key_KEM->public_key_length;
+    memcpy(q, one_time_public_key_responder->signature->signature_content,
+           one_time_public_key_responder->signature->signature_length);
+    q = q + one_time_public_key_responder->signature->signature_length;
+    memcpy(q, ciphertext_1->ciphertext_content,
+           ciphertext_1->ciphertext_length);
+    q = q + ciphertext_1->ciphertext_length;
+    memcpy(q, ciphertext_2->ciphertext_content,
+           ciphertext_2->ciphertext_length);
+    q = q + ciphertext_2->ciphertext_length;
+    memcpy(q, ciphertext_3->ciphertext_content,
+           ciphertext_3->ciphertext_length);
+
     crypto_generichash_init(&hash_state, NULL, 0, HASH_LENGTH);
     crypto_generichash_update(
         &hash_state, (unsigned char *)shared_secret_1.shared_secret_content,
@@ -165,14 +222,15 @@ int initiator(one_time_secret_key *one_time_secret_key_initiator,
     crypto_generichash_update(
         &hash_state, (unsigned char *)shared_secret_3.shared_secret_content,
         crypto_box_BEFORENMBYTES);
-    // crypto_generichash_update(&hash_state, (unsigned char*)
-    // shared_secret_4.shared_secret_content, crypto_box_BEFORENMBYTES);
+    crypto_generichash_update(&hash_state, session_ID.message_content,
+                              session_ID.message_length);
     crypto_generichash_final(&hash_state, pre_key, HASH_LENGTH);
 
     crypto_kdf_derive_from_key(shared_key, sizeof shared_key, 1, CONTEXT,
                                pre_key);
 
-    free_message(&message);
+    free_message(&signed_one_time_key);
+    free_message(&session_ID);
     free_shared_secret_KEM(&shared_secret_1);
     free_shared_secret_KEM(&shared_secret_2);
     free_shared_secret_SKEM(&shared_secret_3);
@@ -182,7 +240,9 @@ int initiator(one_time_secret_key *one_time_secret_key_initiator,
 
 int responder(long_term_secret_key *long_term_secret_key_responder,
               one_time_secret_key *one_time_secret_key_responder,
+              long_term_public_key *long_term_public_key_initiator,
               one_time_public_key *one_time_public_key_initiator,
+              long_term_public_key *long_term_public_key_responder,
               one_time_public_key *one_time_public_key_responder,
               ciphertext *ciphertext_1, ciphertext *ciphertext_2,
               ciphertext *ciphertext_3, size_t security_parameter) {
@@ -190,6 +250,7 @@ int responder(long_term_secret_key *long_term_secret_key_responder,
     uint8_t shared_key[security_parameter], pre_key[HASH_LENGTH];
     crypto_generichash_state hash_state;
     shared_secret shared_secret_1, shared_secret_2, shared_secret_3;
+    message session_ID;
 
     // We reverse what we did in the initiator function
 
@@ -211,6 +272,60 @@ int responder(long_term_secret_key *long_term_secret_key_responder,
         return 1;
     }
 
+    session_ID.message_length =
+        long_term_public_key_initiator->public_key_length +
+        long_term_public_key_responder->public_key_length +
+        one_time_public_key_initiator->public_key_length +
+        one_time_public_key_responder->public_key_length +
+        ciphertext_1->ciphertext_length + ciphertext_2->ciphertext_length +
+        ciphertext_3->ciphertext_length;
+    session_ID.message_content = malloc(session_ID.message_length);
+    void *q = session_ID.message_content;
+    memcpy(q,
+           long_term_public_key_initiator->public_key_KEM->public_key_content,
+           long_term_public_key_initiator->public_key_KEM->public_key_length);
+    q = q + long_term_public_key_initiator->public_key_KEM->public_key_length;
+    memcpy(q,
+           long_term_public_key_initiator->public_key_SIG->public_key_content,
+           long_term_public_key_initiator->public_key_SIG->public_key_length);
+    q = q + long_term_public_key_initiator->public_key_SIG->public_key_length;
+    memcpy(q,
+           long_term_public_key_responder->public_key_KEM->public_key_content,
+           long_term_public_key_responder->public_key_KEM->public_key_length);
+    q = q + long_term_public_key_responder->public_key_KEM->public_key_length;
+    memcpy(q,
+           long_term_public_key_responder->public_key_SIG->public_key_content,
+           long_term_public_key_responder->public_key_SIG->public_key_length);
+    q = q + long_term_public_key_responder->public_key_SIG->public_key_length;
+    memcpy(q,
+           one_time_public_key_initiator->public_key_SKEM->public_key_content,
+           one_time_public_key_initiator->public_key_SKEM->public_key_length);
+    q = q + one_time_public_key_initiator->public_key_SKEM->public_key_length;
+    memcpy(q, one_time_public_key_initiator->public_key_KEM->public_key_content,
+           one_time_public_key_initiator->public_key_KEM->public_key_length);
+    q = q + one_time_public_key_initiator->public_key_KEM->public_key_length;
+    memcpy(q, one_time_public_key_initiator->signature->signature_content,
+           one_time_public_key_initiator->signature->signature_length);
+    q = q + one_time_public_key_initiator->signature->signature_length;
+    memcpy(q,
+           one_time_public_key_responder->public_key_SKEM->public_key_content,
+           one_time_public_key_responder->public_key_SKEM->public_key_length);
+    q = q + one_time_public_key_responder->public_key_SKEM->public_key_length;
+    memcpy(q, one_time_public_key_responder->public_key_KEM->public_key_content,
+           one_time_public_key_responder->public_key_KEM->public_key_length);
+    q = q + one_time_public_key_responder->public_key_KEM->public_key_length;
+    memcpy(q, one_time_public_key_responder->signature->signature_content,
+           one_time_public_key_responder->signature->signature_length);
+    q = q + one_time_public_key_responder->signature->signature_length;
+    memcpy(q, ciphertext_1->ciphertext_content,
+           ciphertext_1->ciphertext_length);
+    q = q + ciphertext_1->ciphertext_length;
+    memcpy(q, ciphertext_2->ciphertext_content,
+           ciphertext_2->ciphertext_length);
+    q = q + ciphertext_2->ciphertext_length;
+    memcpy(q, ciphertext_3->ciphertext_content,
+           ciphertext_3->ciphertext_length);
+
     // We hash the two shared secrets into two random seeds
     crypto_generichash_init(&hash_state, NULL, 0, HASH_LENGTH);
     crypto_generichash_update(
@@ -222,13 +337,14 @@ int responder(long_term_secret_key *long_term_secret_key_responder,
     crypto_generichash_update(
         &hash_state, (unsigned char *)shared_secret_3.shared_secret_content,
         crypto_box_BEFORENMBYTES);
-    // crypto_generichash_update(&hash_state, (unsigned char*)
-    // shared_secret_4.shared_secret_content, crypto_box_BEFORENMBYTES);
+    crypto_generichash_update(&hash_state, session_ID.message_content,
+                              session_ID.message_length);
     crypto_generichash_final(&hash_state, pre_key, HASH_LENGTH);
 
     crypto_kdf_derive_from_key(shared_key, sizeof shared_key, 1, CONTEXT,
                                pre_key);
 
+    free_message(&session_ID);
     free_shared_secret_KEM(&shared_secret_1);
     free_shared_secret_KEM(&shared_secret_2);
     free_shared_secret_SKEM(&shared_secret_3);

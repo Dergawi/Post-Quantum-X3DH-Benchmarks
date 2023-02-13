@@ -77,16 +77,13 @@ int main() {
 
     printf("Benchmarking : X3DH\n");
 
-    int j = 0;
     while (is_done(&benchmark_variables_white_noise) *
                    is_done(&benchmark_variables_long_term_key) *
                    is_done(&benchmark_variables_one_time_key) *
                    is_done(&benchmark_variables_initiate) *
                    is_done(&benchmark_variables_responder) *
                    is_done(&benchmark_variables_protocol) ==
-               0 &&
-           j == 0) {
-        j++;
+               0) {
         public_key_DH long_term_public_key_initiator;
         public_key_DH long_term_public_key_responder;
         secret_key_DH long_term_secret_key_initiator;
@@ -252,44 +249,44 @@ int main() {
         }
     }
 
-    printf("white noise:        %15.0f mean cycles %15.0f cycles variance\n",
+    printf("white noise:        %15.0f mean cycles  %15.0f cycles variance\n",
            get_mean(&benchmark_variables_white_noise),
            get_variance(&benchmark_variables_white_noise));
-    printf("long term key:      %15.0f mean cycles %15.0f cycles "
+    printf("long term key:      %15.0f mean cycles  %15.0f cycles "
            "variance\n",
            get_mean(&benchmark_variables_long_term_key),
            get_variance(&benchmark_variables_long_term_key));
-    printf("static key:         %15.0f mean cycles %15.0f cycles "
+    printf("static key:         %15.0f mean cycles  %15.0f cycles "
            "variance\n",
            get_mean(&benchmark_variables_static_key),
            get_variance(&benchmark_variables_static_key));
-    printf("one time key:       %15.0f mean cycles %15.0f cycles "
+    printf("one time key:       %15.0f mean cycles  %15.0f cycles "
            "variance\n",
            get_mean(&benchmark_variables_one_time_key),
            get_variance(&benchmark_variables_one_time_key));
-    printf("initiate:           %15.0f mean cycles %15.0f cycles "
+    printf("initiate:           %15.0f mean cycles  %15.0f cycles "
            "variance\n",
            get_mean(&benchmark_variables_initiate),
            get_variance(&benchmark_variables_initiate));
-    printf("responder:          %15.0f mean cycles %15.0f cycles "
+    printf("responder:          %15.0f mean cycles  %15.0f cycles "
            "variance\n",
            get_mean(&benchmark_variables_responder),
            get_variance(&benchmark_variables_responder));
-    printf("protocol:           %15.0f mean cycles %15.0f cycles "
+    printf("protocol:           %15.0f mean cycles  %15.0f cycles "
            "variance\n",
            get_mean(&benchmark_variables_protocol),
            get_variance(&benchmark_variables_protocol));
-    printf("long term key:     %15.0d bytes stored %15.0d bytes sent\n",
+    printf("long term key:      %15.0d bytes stored %15.0d bytes sent\n",
            long_term_key_stored_data_size, long_term_key_sent_data_size);
-    printf("static key:        %15.0d bytes stored %15.0d bytes sent\n",
+    printf("static key:         %15.0d bytes stored %15.0d bytes sent\n",
            static_key_stored_data_size, static_key_sent_data_size);
-    printf("one time key:      %15.0d bytes stored %15.0d bytes sent\n",
+    printf("one time key:       %15.0d bytes stored %15.0d bytes sent\n",
            one_time_key_stored_data_size, one_time_key_sent_data_size);
-    printf("initiate:          %15.0d bytes stored %15.0d bytes sent\n",
+    printf("initiate:           %15.0d bytes stored %15.0d bytes sent\n",
            initiator_stored_data_size, initiator_sent_data_size);
-    printf("responder:         %15.0d bytes stored %15.0d bytes sent\n",
+    printf("responder:          %15.0d bytes stored %15.0d bytes sent\n",
            responder_stored_data_size, responder_sent_data_size);
-    printf("protocol:          %15.0d bytes stored %15.0d bytes sent\n",
+    printf("protocol:           %15.0d bytes stored %15.0d bytes sent\n",
            hole_protocol_stored_data_size, hole_protocol_sent_data_size);
     printf("\n");
 
