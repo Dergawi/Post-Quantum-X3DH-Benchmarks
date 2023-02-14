@@ -2,7 +2,7 @@ all:
 	cd ./src/SKEM_KEM_SIG && make
 	cd ./src/KEM_SIG && make
 	cd ./src/KEM_RS && make
-	cd ./KEM_DVS && make
+	cd ./src/KEM_DVS && make
 	cd ./src/DH && make
 
 clean:

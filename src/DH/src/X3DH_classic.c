@@ -78,12 +78,12 @@ int main() {
     printf("Benchmarking : X3DH\n");
 
     while (is_done(&benchmark_variables_white_noise) *
-                   is_done(&benchmark_variables_long_term_key) *
-                   is_done(&benchmark_variables_one_time_key) *
-                   is_done(&benchmark_variables_initiate) *
-                   is_done(&benchmark_variables_responder) *
-                   is_done(&benchmark_variables_protocol) ==
-               0) {
+               is_done(&benchmark_variables_long_term_key) *
+               is_done(&benchmark_variables_one_time_key) *
+               is_done(&benchmark_variables_initiate) *
+               is_done(&benchmark_variables_responder) *
+               is_done(&benchmark_variables_protocol) ==
+           0) {
         public_key_DH long_term_public_key_initiator;
         public_key_DH long_term_public_key_responder;
         secret_key_DH long_term_secret_key_initiator;

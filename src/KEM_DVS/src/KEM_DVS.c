@@ -61,9 +61,8 @@ int main(int argc, char const *argv[]) {
     fclose(fpt);
 
     fpt = fopen(buf, "a");
-    fprintf(fpt,
-            "KEM,Long term key,Static key,One time "
-            "key,Initiate,Responder,Hole protocol\n");
+    fprintf(fpt, "KEM,Long term key,Static key,One time "
+                 "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
     snprintf(buf, sizeof(buf),
@@ -73,9 +72,8 @@ int main(int argc, char const *argv[]) {
     fclose(fpt);
 
     fpt = fopen(buf, "a");
-    fprintf(fpt,
-            "KEM,Long term key,Static key,One time "
-            "key,Initiate,Responder,Hole protocol\n");
+    fprintf(fpt, "KEM,Long term key,Static key,One time "
+                 "key,Initiate,Responder,Hole protocol\n");
     fclose(fpt);
 
     benchmark_variables benchmark_variables_white_noise;
@@ -129,14 +127,14 @@ int main(int argc, char const *argv[]) {
                    get_NIST_security_level_KEM(get_name_KEM(i)));
 
             while (is_done(&benchmark_variables_white_noise) *
-                           is_done(&benchmark_variables_initiate_protocol) *
-                           is_done(&benchmark_variables_long_term_key) *
-                           is_done(&benchmark_variables_static_key) *
-                           is_done(&benchmark_variables_one_time_key) *
-                           is_done(&benchmark_variables_initiate) *
-                           is_done(&benchmark_variables_responder) *
-                           is_done(&benchmark_variables_protocol) ==
-                       0) {
+                       is_done(&benchmark_variables_initiate_protocol) *
+                       is_done(&benchmark_variables_long_term_key) *
+                       is_done(&benchmark_variables_static_key) *
+                       is_done(&benchmark_variables_one_time_key) *
+                       is_done(&benchmark_variables_initiate) *
+                       is_done(&benchmark_variables_responder) *
+                       is_done(&benchmark_variables_protocol) ==
+                   0) {
                 long_term_public_key long_term_public_key_initiator;
                 long_term_public_key long_term_public_key_responder;
                 static_public_key static_public_key_responder;
@@ -450,9 +448,10 @@ int main(int argc, char const *argv[]) {
 
             fclose(fpt);
 
-            snprintf(buf, sizeof(buf),
-                     "../results/KEM_DVS/variance_cycles_KEM_DVS_NIST_level_%d.csv",
-                     requested_NIST_security_level);
+            snprintf(
+                buf, sizeof(buf),
+                "../results/KEM_DVS/variance_cycles_KEM_DVS_NIST_level_%d.csv",
+                requested_NIST_security_level);
             fpt = fopen(buf, "a");
 
             k = 0;
@@ -474,9 +473,10 @@ int main(int argc, char const *argv[]) {
 
             fclose(fpt);
 
-            snprintf(buf, sizeof(buf),
-                     "../results/KEM_DVS/stored_bytes_KEM_DVS_NIST_level_%d.csv",
-                     requested_NIST_security_level);
+            snprintf(
+                buf, sizeof(buf),
+                "../results/KEM_DVS/stored_bytes_KEM_DVS_NIST_level_%d.csv",
+                requested_NIST_security_level);
             fpt = fopen(buf, "a");
 
             k = 0;
