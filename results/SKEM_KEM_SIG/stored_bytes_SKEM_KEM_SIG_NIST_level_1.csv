@@ -1,5 +1,5 @@
 KEM,Long term key,One time key,Initiate,Responder,Hole protocol
-Kyber512 + Dilithium2,6272,62892,32,32,69228
-Kyber512 + Falcon-512,4610,61128,32,32,65802
-Kyber512-90s + Dilithium2,6272,62892,32,32,69228
-Kyber512-90s + Falcon-512,4610,61125,32,32,65799
+Kyber512 + Dilithium2,6272,95132,32,32,101468
+Kyber512 + Falcon-512,4610,93369,32,32,98043
+Kyber512-90s + Dilithium2,6272,95132,32,32,101468
+Kyber512-90s + Falcon-512,4610,93371,32,32,98045

@@ -1,8 +1,10 @@
 #include "libProtocol.h"
 
-int initiate_protocol(const char *KEM_scheme_name) {
+int initiate_protocol(const char *KEM_scheme_name, const char *SIG_scheme_name) {
 
     instantiate_KEM(KEM_scheme_name);
+
+    instantiate_SIG(SIG_scheme_name);
 
     initiate_RS();
 
@@ -14,8 +16,10 @@ int long_term_key_gen(long_term_secret_key *long_term_secret_key,
 
     long_term_public_key->public_key_KEM = malloc(sizeof(public_key_KEM));
     long_term_public_key->public_key_RS = malloc(sizeof(public_key_RS));
+    long_term_public_key->public_key_SIG = malloc(sizeof(public_key_SIG));
     long_term_secret_key->secret_key_KEM = malloc(sizeof(secret_key_KEM));
     long_term_secret_key->secret_key_RS = malloc(sizeof(secret_key_RS));
+    long_term_secret_key->secret_key_SIG = malloc(sizeof(secret_key_SIG));
 
     if (key_gen_KEM(long_term_secret_key->secret_key_KEM,
                     long_term_public_key->public_key_KEM) < 0) {
@@ -29,21 +33,32 @@ int long_term_key_gen(long_term_secret_key *long_term_secret_key,
         return 2;
     }
 
+    if (key_gen_SIG(long_term_secret_key->secret_key_SIG,
+                    long_term_public_key->public_key_SIG) < 0) {
+        fprintf(stderr, "ERROR: SIG key pair generation failed! \n");
+        return 2;
+    }
+
     long_term_public_key->public_key_length =
         long_term_public_key->public_key_KEM->public_key_length +
-        long_term_public_key->public_key_RS->public_key_length;
+        long_term_public_key->public_key_RS->public_key_length +
+        long_term_public_key->public_key_SIG->public_key_length;
     long_term_secret_key->secret_key_length =
         long_term_secret_key->secret_key_KEM->secret_key_length +
-        long_term_secret_key->secret_key_RS->secret_key_length;
+        long_term_secret_key->secret_key_RS->secret_key_length +
+        long_term_secret_key->secret_key_SIG->secret_key_length;
 
     return 0;
 }
 
-int one_time_key_gen(one_time_secret_key *one_time_secret_key,
+int one_time_key_gen(one_time_secret_key *one_time_secret_key, long_term_secret_key *long_term_secret_key,
                      one_time_public_key *one_time_public_key) {
+
+    message_SIG public_keys_signature;
 
     one_time_public_key->public_key_KEM = malloc(sizeof(public_key_KEM));
     one_time_public_key->public_key_RS = malloc(sizeof(public_key_RS));
+    one_time_public_key->signature = malloc(sizeof(signature_SIG));
     one_time_secret_key->secret_key_KEM = malloc(sizeof(secret_key_KEM));
     one_time_secret_key->secret_key_RS = malloc(sizeof(secret_key_RS));
 
@@ -59,12 +74,33 @@ int one_time_key_gen(one_time_secret_key *one_time_secret_key,
         return 2;
     }
 
-    one_time_public_key->public_key_length =
+    public_keys_signature.message_length =
         one_time_public_key->public_key_KEM->public_key_length +
         one_time_public_key->public_key_RS->public_key_length;
+    public_keys_signature.message_content =
+        malloc(public_keys_signature.message_length);
+    void *q = public_keys_signature.message_content;
+    memcpy(q, one_time_public_key->public_key_KEM->public_key_content,
+           one_time_public_key->public_key_KEM->public_key_length);
+    q = q + one_time_public_key->public_key_KEM->public_key_length;
+    memcpy(q, one_time_public_key->public_key_RS->public_key_content,
+           one_time_public_key->public_key_RS->public_key_length);
+
+    if (sign_SIG(long_term_secret_key->secret_key_SIG, &public_keys_signature,
+                 one_time_public_key->signature) < 0) {
+        fprintf(stderr, "ERROR: SIG key pair generation failed! \n");
+        return 2;
+    }
+
+    one_time_public_key->public_key_length =
+        one_time_public_key->public_key_KEM->public_key_length +
+        one_time_public_key->public_key_RS->public_key_length +
+        one_time_public_key->signature->signature_length;
     one_time_secret_key->secret_key_length =
         one_time_secret_key->secret_key_KEM->secret_key_length +
         one_time_secret_key->secret_key_RS->secret_key_length;
+
+    free_message_SIG(&public_keys_signature);
 
     return 0;
 }
@@ -83,6 +119,29 @@ int initiator(long_term_secret_key *long_term_secret_key_initiator,
     message session_ID;
     signature session_ID_signature;
     shared_secret shared_secret_1, shared_secret_2;
+    message_SIG public_keys_signature;
+
+    public_keys_signature.message_length =
+        one_time_public_key_responder->public_key_KEM->public_key_length +
+        one_time_public_key_responder->public_key_RS->public_key_length;
+    public_keys_signature.message_content =
+        malloc(public_keys_signature.message_length);
+    void *q = public_keys_signature.message_content;
+    memcpy(q, one_time_public_key_responder->public_key_KEM->public_key_content,
+           one_time_public_key_responder->public_key_KEM->public_key_length);
+    q = q + one_time_public_key_responder->public_key_KEM->public_key_length;
+    memcpy(q,
+           one_time_public_key_responder->public_key_RS
+               ->public_key_content,
+           one_time_public_key_responder->public_key_RS
+               ->public_key_length);
+
+    if (verify_SIG(long_term_public_key_responder->public_key_SIG,
+                   &public_keys_signature,
+                   one_time_public_key_responder->signature)) {
+        fprintf(stderr, "ERROR: SIG failed! \n");
+        return 1;
+    }
 
     if (encapsulate_KEM(long_term_public_key_responder->public_key_KEM,
                         ciphertext_1, &shared_secret_1) < 0) {
@@ -215,6 +274,7 @@ int initiator(long_term_secret_key *long_term_secret_key_initiator,
 
     free_shared_secret_KEM(&shared_secret_1);
     free_shared_secret_KEM(&shared_secret_2);
+    free_message_SIG(&public_keys_signature);
     free_message(&session_ID);
     free_signature(&session_ID_signature);
 
@@ -367,6 +427,8 @@ int terminate_protocol() {
 
     terminate_KEM();
 
+    terminate_SIG();
+
     terminate_RS();
 
     return 0;
@@ -379,10 +441,14 @@ void free_long_term_key_pair(long_term_secret_key *long_term_secret_key,
                       long_term_public_key->public_key_KEM);
     free_key_pair_RS(long_term_secret_key->secret_key_RS,
                      long_term_public_key->public_key_RS);
+    free_key_pair_SIG(long_term_secret_key->secret_key_SIG,
+                      long_term_public_key->public_key_SIG);
     free(long_term_public_key->public_key_KEM);
     free(long_term_public_key->public_key_RS);
+    free(long_term_public_key->public_key_SIG);
     free(long_term_secret_key->secret_key_KEM);
     free(long_term_secret_key->secret_key_RS);
+    free(long_term_secret_key->secret_key_SIG);
 
     return;
 }
@@ -394,8 +460,10 @@ void free_one_time_key_pair(one_time_secret_key *one_time_secret_key,
                       one_time_public_key->public_key_KEM);
     free_key_pair_RS(one_time_secret_key->secret_key_RS,
                      one_time_public_key->public_key_RS);
+    free_signature_SIG(one_time_public_key->signature);
     free(one_time_public_key->public_key_KEM);
     free(one_time_public_key->public_key_RS);
+    free(one_time_public_key->signature);
     free(one_time_secret_key->secret_key_KEM);
     free(one_time_secret_key->secret_key_RS);
 

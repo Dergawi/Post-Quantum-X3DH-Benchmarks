@@ -47,10 +47,10 @@ int static_key_gen(static_secret_key *static_secret_key,
                    static_public_key *static_public_key) {
 
     static_public_key->public_key_KEM = malloc(sizeof(public_key_KEM));
-    static_public_key->signature = malloc(sizeof(signature));
+    static_public_key->signature = malloc(sizeof(signature_SIG));
     static_secret_key->secret_key_KEM = malloc(sizeof(secret_key_KEM));
 
-    message message;
+    message_SIG public_keys_signature;
 
     if (key_gen_KEM(static_secret_key->secret_key_KEM,
                     static_public_key->public_key_KEM) < 0) {
@@ -58,15 +58,15 @@ int static_key_gen(static_secret_key *static_secret_key,
         return 1;
     }
 
-    message.message_content =
+    public_keys_signature.message_content =
         malloc(static_public_key->public_key_KEM->public_key_length);
-    memcpy(message.message_content,
+    memcpy(public_keys_signature.message_content,
            static_public_key->public_key_KEM->public_key_content,
            static_public_key->public_key_KEM->public_key_length);
-    message.message_length =
+    public_keys_signature.message_length =
         static_public_key->public_key_KEM->public_key_length;
 
-    if (sign_SIG(long_term_secret_key->secret_key_SIG, &message,
+    if (sign_SIG(long_term_secret_key->secret_key_SIG, &public_keys_signature,
                  static_public_key->signature) < 0) {
         fprintf(stderr, "ERROR: SIG key pair generation failed! \n");
         return 2;
@@ -78,7 +78,7 @@ int static_key_gen(static_secret_key *static_secret_key,
     static_secret_key->secret_key_length =
         static_secret_key->secret_key_KEM->secret_key_length;
 
-    free_message(&message);
+    free_message_SIG(&public_keys_signature);
 
     return 0;
 }
@@ -112,17 +112,17 @@ int initiator(long_term_public_key *long_term_public_key_responder,
     uint8_t shared_key[security_parameter], pre_key[HASH_LENGTH];
     crypto_generichash_state hash_state;
     shared_secret shared_secret_1, shared_secret_2, shared_secret_3;
-    message message;
+    message_SIG public_keys_signature;
 
-    message.message_content =
+    public_keys_signature.message_content =
         malloc(static_public_key_responder->public_key_KEM->public_key_length);
-    memcpy(message.message_content,
+    memcpy(public_keys_signature.message_content,
            static_public_key_responder->public_key_KEM->public_key_content,
            static_public_key_responder->public_key_KEM->public_key_length);
-    message.message_length =
+    public_keys_signature.message_length =
         static_public_key_responder->public_key_KEM->public_key_length;
 
-    if (verify_SIG(long_term_public_key_responder->public_key_SIG, &message,
+    if (verify_SIG(long_term_public_key_responder->public_key_SIG, &public_keys_signature,
                    static_public_key_responder->signature)) {
         fprintf(stderr, "ERROR: SIG failed! \n");
         return 1;
@@ -159,7 +159,7 @@ int initiator(long_term_public_key *long_term_public_key_responder,
     crypto_kdf_derive_from_key(shared_key, sizeof shared_key, 1, CONTEXT,
                                pre_key);
 
-    free_message(&message);
+    free_message_SIG(&public_keys_signature);
     free_shared_secret_KEM(&shared_secret_1);
     free_shared_secret_KEM(&shared_secret_2);
     free_shared_secret_KEM(&shared_secret_3);
@@ -247,7 +247,7 @@ void free_static_key_pair(static_secret_key *static_secret_key,
 
     free_key_pair_KEM(static_secret_key->secret_key_KEM,
                       static_public_key->public_key_KEM);
-    free_signature(static_public_key->signature);
+    free_signature_SIG(static_public_key->signature);
     free(static_public_key->public_key_KEM);
     free(static_secret_key->secret_key_KEM);
     free(static_public_key->signature);

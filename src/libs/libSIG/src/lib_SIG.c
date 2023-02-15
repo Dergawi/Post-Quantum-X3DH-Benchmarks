@@ -78,8 +78,8 @@ int key_gen_SIG(secret_key_SIG *secret_key_SIG,
     return 0;
 }
 
-int sign_SIG(secret_key_SIG *secret_key_SIG, message *message,
-             signature *signature) {
+int sign_SIG(secret_key_SIG *secret_key_SIG, message_SIG *message,
+             signature_SIG *signature) {
 
     signature->signature_content = NULL;
 
@@ -103,8 +103,8 @@ int sign_SIG(secret_key_SIG *secret_key_SIG, message *message,
     return 0;
 }
 
-int verify_SIG(public_key_SIG *public_key_SIG, message *message,
-               signature *signature) {
+int verify_SIG(public_key_SIG *public_key_SIG, message_SIG *message,
+               signature_SIG *signature) {
 
     OQS_STATUS rc = OQS_SIG_verify(
         SIG_scheme, message->message_content, message->message_length,
@@ -136,14 +136,14 @@ void free_key_pair_SIG(secret_key_SIG *secret_key_SIG,
     return;
 }
 
-void free_message(message *message) {
+void free_message_SIG(message_SIG *message) {
 
     free(message->message_content);
 
     return;
 }
 
-void free_signature(signature *signature) {
+void free_signature_SIG(signature_SIG *signature) {
 
     OQS_MEM_insecure_free(signature->signature_content);
 

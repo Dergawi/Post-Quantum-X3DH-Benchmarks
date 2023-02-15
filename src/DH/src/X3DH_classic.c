@@ -321,7 +321,7 @@ int main() {
     snprintf(buf, sizeof(buf), "../results/DH/stored_bytes_X3DH.csv");
     fpt = fopen(buf, "a");
 
-    fprintf(fpt, "%d,%d,%d,%d,%d,%d,\n", long_term_key_stored_data_size,
+    fprintf(fpt, "%d,%d,%d,%d,%d,%d\n", long_term_key_stored_data_size,
             static_key_stored_data_size, one_time_key_stored_data_size,
             initiator_stored_data_size, responder_stored_data_size,
             hole_protocol_stored_data_size);
@@ -331,7 +331,7 @@ int main() {
     snprintf(buf, sizeof(buf), "../results/DH/sent_bytes_X3DH.csv");
     fpt = fopen(buf, "a");
 
-    fprintf(fpt, "%d,%d,%d,%d,%d,%d,\n", long_term_key_sent_data_size,
+    fprintf(fpt, "%d,%d,%d,%d,%d,%d\n", long_term_key_sent_data_size,
             static_key_sent_data_size, one_time_key_sent_data_size,
             initiator_sent_data_size, responder_sent_data_size,
             hole_protocol_sent_data_size);

@@ -20,7 +20,7 @@ typedef struct long_term_secret_key {
 
 typedef struct static_public_key {
     public_key_KEM *public_key_KEM;
-    signature *signature;
+    signature_SIG *signature;
     size_t public_key_length;
 } static_public_key;
 

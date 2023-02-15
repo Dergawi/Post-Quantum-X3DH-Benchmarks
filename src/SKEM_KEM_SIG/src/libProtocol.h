@@ -27,7 +27,7 @@ typedef struct static_public_key {
 typedef struct one_time_public_key {
     public_key_SKEM *public_key_SKEM;
     public_key_KEM *public_key_KEM;
-    signature *signature;
+    signature_SIG *signature;
     size_t public_key_length;
 } one_time_public_key;
 

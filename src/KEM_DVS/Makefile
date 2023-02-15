@@ -5,7 +5,7 @@ SRC_FILES = ./src/
 OBJ_FILES = ./obj/
 EXE_FILES = ../../exe/
 TEST_FILES = ./exe/
-LIBS = ../libs/libKEM/build/lib/libKEM.a ../libs/libBenchmark/build/lib/libBenchmark.a ../libs/libDVS/build/lib/libDVS.a -loqs -lm -lsodium -lcrypto
+LIBS = ../libs/libKEM/build/lib/libKEM.a ../libs/libSIG/build/lib/libSIG.a ../libs/libBenchmark/build/lib/libBenchmark.a ../libs/libDVS/build/lib/libDVS.a -loqs -lm -lsodium -lcrypto
 EXEC = KEM_DVS
 
 all: $(EXEC)

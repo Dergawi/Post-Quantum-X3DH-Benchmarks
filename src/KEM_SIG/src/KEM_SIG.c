@@ -492,7 +492,7 @@ int main(int argc, char const *argv[]) {
                 fprintf(fpt, ",");
 
                 fprintf(
-                    fpt, "%d,%d,%d,%d,%d,%d,\n", long_term_key_stored_data_size,
+                    fpt, "%d,%d,%d,%d,%d,%d\n", long_term_key_stored_data_size,
                     static_key_stored_data_size, one_time_key_stored_data_size,
                     initiator_stored_data_size, responder_stored_data_size,
                     hole_protocol_stored_data_size);
@@ -518,7 +518,7 @@ int main(int argc, char const *argv[]) {
                 }
                 fprintf(fpt, ",");
 
-                fprintf(fpt, "%d,%d,%d,%d,%d,%d,\n",
+                fprintf(fpt, "%d,%d,%d,%d,%d,%d\n",
                         long_term_key_sent_data_size, static_key_sent_data_size,
                         one_time_key_sent_data_size, initiator_sent_data_size,
                         responder_sent_data_size, hole_protocol_sent_data_size);

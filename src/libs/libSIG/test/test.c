@@ -4,8 +4,8 @@ int main() {
 
     public_key_SIG public_key_SIG;
     secret_key_SIG secret_key_SIG;
-    message message;
-    signature signature;
+    message_SIG message;
+    signature_SIG signature;
 
     unsigned char m[] = "Raptor: next generation of Falcon with stealth mode";
 
@@ -25,7 +25,7 @@ int main() {
     fprintf(stderr, "Test successful\n");
 
     free_key_pair_SIG(&secret_key_SIG, &public_key_SIG);
-    free_signature(&signature);
+    free_signature_SIG(&signature);
 
     return 0;
 }
