@@ -122,7 +122,8 @@ int initiator(long_term_public_key *long_term_public_key_responder,
     public_keys_signature.message_length =
         static_public_key_responder->public_key_KEM->public_key_length;
 
-    if (verify_SIG(long_term_public_key_responder->public_key_SIG, &public_keys_signature,
+    if (verify_SIG(long_term_public_key_responder->public_key_SIG,
+                   &public_keys_signature,
                    static_public_key_responder->signature)) {
         fprintf(stderr, "ERROR: SIG failed! \n");
         return 1;

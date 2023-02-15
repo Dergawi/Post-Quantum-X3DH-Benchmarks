@@ -137,13 +137,13 @@ int main(int argc, char const *argv[]) {
                        get_NIST_security_level_KEM(get_name_KEM(i)));
 
                 while (is_done(&benchmark_variables_white_noise) *
-                        is_done(&benchmark_variables_initiate_protocol) *
-                        is_done(&benchmark_variables_long_term_key) *
-                        is_done(&benchmark_variables_one_time_key) *
-                        is_done(&benchmark_variables_initiate) *
-                        is_done(&benchmark_variables_responder) *
-                        is_done(&benchmark_variables_protocol) ==
-                    0) {
+                           is_done(&benchmark_variables_initiate_protocol) *
+                           is_done(&benchmark_variables_long_term_key) *
+                           is_done(&benchmark_variables_one_time_key) *
+                           is_done(&benchmark_variables_initiate) *
+                           is_done(&benchmark_variables_responder) *
+                           is_done(&benchmark_variables_protocol) ==
+                       0) {
                     long_term_public_key long_term_public_key_initiator;
                     long_term_public_key long_term_public_key_responder;
                     one_time_public_key one_time_public_key_responder;
@@ -166,16 +166,18 @@ int main(int argc, char const *argv[]) {
                     end_benchmark(&benchmark_variables_initiate_protocol);
                     start_benchmark(&benchmark_variables_long_term_key);
                     if (long_term_key_gen(&long_term_secret_key_initiator,
-                                        &long_term_public_key_initiator) != 0) {
+                                          &long_term_public_key_initiator) !=
+                        0) {
                         ++error_count;
-                        free_long_term_key_pair(&long_term_secret_key_initiator,
-                                                &long_term_public_key_initiator);
+                        free_long_term_key_pair(
+                            &long_term_secret_key_initiator,
+                            &long_term_public_key_initiator);
                         terminate_protocol();
                     } else {
                         end_benchmark(&benchmark_variables_long_term_key);
-                        if (long_term_key_gen(&long_term_secret_key_responder,
-                                            &long_term_public_key_responder) !=
-                            0) {
+                        if (long_term_key_gen(
+                                &long_term_secret_key_responder,
+                                &long_term_public_key_responder) != 0) {
                             ++error_count;
                             free_long_term_key_pair(
                                 &long_term_secret_key_initiator,
@@ -186,9 +188,10 @@ int main(int argc, char const *argv[]) {
                             terminate_protocol();
                         } else {
                             start_benchmark(&benchmark_variables_one_time_key);
-                            if (one_time_key_gen(&one_time_secret_key_responder, &long_term_secret_key_responder,
-                                                &one_time_public_key_responder) !=
-                                0) {
+                            if (one_time_key_gen(
+                                    &one_time_secret_key_responder,
+                                    &long_term_secret_key_responder,
+                                    &one_time_public_key_responder) != 0) {
                                 ++error_count;
                                 free_long_term_key_pair(
                                     &long_term_secret_key_initiator,
@@ -201,7 +204,8 @@ int main(int argc, char const *argv[]) {
                                     &one_time_public_key_responder);
                                 terminate_protocol();
                             } else {
-                                end_benchmark(&benchmark_variables_one_time_key);
+                                end_benchmark(
+                                    &benchmark_variables_one_time_key);
                                 start_benchmark(&benchmark_variables_initiate);
                                 if (initiator(
                                         &long_term_secret_key_initiator,
@@ -228,8 +232,10 @@ int main(int argc, char const *argv[]) {
                                         &one_time_public_key_responder);
                                     terminate_protocol();
                                 } else {
-                                    end_benchmark(&benchmark_variables_initiate);
-                                    start_benchmark(&benchmark_variables_responder);
+                                    end_benchmark(
+                                        &benchmark_variables_initiate);
+                                    start_benchmark(
+                                        &benchmark_variables_responder);
                                     if (responder(
                                             &long_term_secret_key_responder,
                                             &one_time_secret_key_responder,
@@ -319,50 +325,57 @@ int main(int argc, char const *argv[]) {
                     }
                 }
                 printf("white noise:        %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_white_noise),
-                    get_variance(&benchmark_variables_white_noise));
+                       "variance\n",
+                       get_mean(&benchmark_variables_white_noise),
+                       get_variance(&benchmark_variables_white_noise));
                 printf("initiate_protocol:  %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_initiate_protocol),
-                    get_variance(&benchmark_variables_initiate_protocol));
+                       "variance\n",
+                       get_mean(&benchmark_variables_initiate_protocol),
+                       get_variance(&benchmark_variables_initiate_protocol));
                 printf("long term key:      %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_long_term_key),
-                    get_variance(&benchmark_variables_long_term_key));
+                       "variance\n",
+                       get_mean(&benchmark_variables_long_term_key),
+                       get_variance(&benchmark_variables_long_term_key));
                 printf("one time key:       %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_one_time_key),
-                    get_variance(&benchmark_variables_one_time_key));
+                       "variance\n",
+                       get_mean(&benchmark_variables_one_time_key),
+                       get_variance(&benchmark_variables_one_time_key));
                 printf("initiate:           %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_initiate),
-                    get_variance(&benchmark_variables_initiate));
+                       "variance\n",
+                       get_mean(&benchmark_variables_initiate),
+                       get_variance(&benchmark_variables_initiate));
                 printf("responder:          %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_responder),
-                    get_variance(&benchmark_variables_responder));
+                       "variance\n",
+                       get_mean(&benchmark_variables_responder),
+                       get_variance(&benchmark_variables_responder));
                 printf("protocol:           %15.0f mean cycles %15.0f cycles "
-                    "variance\n",
-                    get_mean(&benchmark_variables_protocol),
-                    get_variance(&benchmark_variables_protocol));
-                printf("long term key:     %15.0d bytes stored %15.0d bytes sent\n",
-                    long_term_key_stored_data_size,
-                    long_term_key_sent_data_size);
-                printf("one time key:      %15.0d bytes stored %15.0d bytes sent\n",
-                    one_time_key_stored_data_size, one_time_key_sent_data_size);
-                printf("initiate:          %15.0d bytes stored %15.0d bytes sent\n",
-                    initiator_stored_data_size, initiator_sent_data_size);
-                printf("responder:         %15.0d bytes stored %15.0d bytes sent\n",
-                    responder_stored_data_size, responder_sent_data_size);
-                printf("protocol:          %15.0d bytes stored %15.0d bytes sent\n",
-                    hole_protocol_stored_data_size,
-                    hole_protocol_sent_data_size);
+                       "variance\n",
+                       get_mean(&benchmark_variables_protocol),
+                       get_variance(&benchmark_variables_protocol));
+                printf("long term key:     %15.0d bytes stored %15.0d bytes "
+                       "sent\n",
+                       long_term_key_stored_data_size,
+                       long_term_key_sent_data_size);
+                printf("one time key:      %15.0d bytes stored %15.0d bytes "
+                       "sent\n",
+                       one_time_key_stored_data_size,
+                       one_time_key_sent_data_size);
+                printf("initiate:          %15.0d bytes stored %15.0d bytes "
+                       "sent\n",
+                       initiator_stored_data_size, initiator_sent_data_size);
+                printf("responder:         %15.0d bytes stored %15.0d bytes "
+                       "sent\n",
+                       responder_stored_data_size, responder_sent_data_size);
+                printf("protocol:          %15.0d bytes stored %15.0d bytes "
+                       "sent\n",
+                       hole_protocol_stored_data_size,
+                       hole_protocol_sent_data_size);
                 printf("\n");
 
-                snprintf(buf, sizeof(buf),
-                        "../results/KEM_RS/mean_cycles_KEM_RS_NIST_level_%d.csv",
-                        requested_NIST_security_level);
+                snprintf(
+                    buf, sizeof(buf),
+                    "../results/KEM_RS/mean_cycles_KEM_RS_NIST_level_%d.csv",
+                    requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
                 k = 0;
@@ -389,10 +402,10 @@ int main(int argc, char const *argv[]) {
 
                 fclose(fpt);
 
-                snprintf(
-                    buf, sizeof(buf),
-                    "../results/KEM_RS/variance_cycles_KEM_RS_NIST_level_%d.csv",
-                    requested_NIST_security_level);
+                snprintf(buf, sizeof(buf),
+                         "../results/KEM_RS/"
+                         "variance_cycles_KEM_RS_NIST_level_%d.csv",
+                         requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
                 k = 0;
@@ -419,9 +432,10 @@ int main(int argc, char const *argv[]) {
 
                 fclose(fpt);
 
-                snprintf(buf, sizeof(buf),
-                        "../results/KEM_RS/stored_bytes_KEM_RS_NIST_level_%d.csv",
-                        requested_NIST_security_level);
+                snprintf(
+                    buf, sizeof(buf),
+                    "../results/KEM_RS/stored_bytes_KEM_RS_NIST_level_%d.csv",
+                    requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
                 k = 0;
@@ -438,14 +452,16 @@ int main(int argc, char const *argv[]) {
                 fprintf(fpt, ",");
 
                 fprintf(fpt, "%d,%d,%d,%d,%d\n", long_term_key_stored_data_size,
-                        one_time_key_stored_data_size, initiator_stored_data_size,
-                        responder_stored_data_size, hole_protocol_stored_data_size);
+                        one_time_key_stored_data_size,
+                        initiator_stored_data_size, responder_stored_data_size,
+                        hole_protocol_stored_data_size);
 
                 fclose(fpt);
 
-                snprintf(buf, sizeof(buf),
-                        "../results/KEM_RS/sent_bytes_KEM_RS_NIST_level_%d.csv",
-                        requested_NIST_security_level);
+                snprintf(
+                    buf, sizeof(buf),
+                    "../results/KEM_RS/sent_bytes_KEM_RS_NIST_level_%d.csv",
+                    requested_NIST_security_level);
                 fpt = fopen(buf, "a");
 
                 k = 0;

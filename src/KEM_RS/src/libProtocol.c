@@ -1,6 +1,7 @@
 #include "libProtocol.h"
 
-int initiate_protocol(const char *KEM_scheme_name, const char *SIG_scheme_name) {
+int initiate_protocol(const char *KEM_scheme_name,
+                      const char *SIG_scheme_name) {
 
     instantiate_KEM(KEM_scheme_name);
 
@@ -51,7 +52,8 @@ int long_term_key_gen(long_term_secret_key *long_term_secret_key,
     return 0;
 }
 
-int one_time_key_gen(one_time_secret_key *one_time_secret_key, long_term_secret_key *long_term_secret_key,
+int one_time_key_gen(one_time_secret_key *one_time_secret_key,
+                     long_term_secret_key *long_term_secret_key,
                      one_time_public_key *one_time_public_key) {
 
     message_SIG public_keys_signature;
@@ -130,11 +132,8 @@ int initiator(long_term_secret_key *long_term_secret_key_initiator,
     memcpy(q, one_time_public_key_responder->public_key_KEM->public_key_content,
            one_time_public_key_responder->public_key_KEM->public_key_length);
     q = q + one_time_public_key_responder->public_key_KEM->public_key_length;
-    memcpy(q,
-           one_time_public_key_responder->public_key_RS
-               ->public_key_content,
-           one_time_public_key_responder->public_key_RS
-               ->public_key_length);
+    memcpy(q, one_time_public_key_responder->public_key_RS->public_key_content,
+           one_time_public_key_responder->public_key_RS->public_key_length);
 
     if (verify_SIG(long_term_public_key_responder->public_key_SIG,
                    &public_keys_signature,

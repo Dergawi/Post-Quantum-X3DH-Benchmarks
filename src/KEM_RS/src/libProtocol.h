@@ -41,7 +41,8 @@ int initiate_protocol(const char *KEM_scheme_name, const char *SIG_scheme_name);
 int long_term_key_gen(long_term_secret_key *long_term_secret_key,
                       long_term_public_key *long_term_public_key);
 
-int one_time_key_gen(one_time_secret_key *one_time_secret_key, long_term_secret_key *long_term_secret_key,
+int one_time_key_gen(one_time_secret_key *one_time_secret_key,
+                     long_term_secret_key *long_term_secret_key,
                      one_time_public_key *one_time_public_key);
 
 int initiator(long_term_secret_key *long_term_secret_key_initiator,
