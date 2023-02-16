@@ -1,4 +1,4 @@
-KEM,Long term key,Static key,One time key,Initiate,Responder,Hole protocol
+KEM,Long term key,Static key,One time key,Initiate,Responder,Whole protocol
 Kyber512 + Dilithium2,14465,13045,2432,48,48,30038
 Kyber512 + Falcon-512,12803,11283,2432,48,48,26614
 Kyber512-90s + Dilithium2,14465,13045,2432,48,48,30038
