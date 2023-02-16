@@ -1,4 +1,4 @@
-KEM,White Noise,Protocol Setup,Long term key,One time key,Initiate,Responder,Hole protocol
+KEM,White Noise,Protocol Setup,Long term key,One time key,Initiate,Responder,Whole protocol
 Kyber512 + Dilithium2,2196,243381,18671057,19034983,597464,306608,33600708
 Kyber512 + Falcon-512,1623,180075,18807532,19984802,664099,356426,36063691
 Kyber512-90s + Dilithium2,1383,153546,21868014,19684691,753993,475486,36915291
