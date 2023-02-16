@@ -10,5 +10,8 @@ It uses the libraries [liboqs](https://github.com/open-quantum-safe/liboqs), [ra
 
 This library was coded on Ubuntu 22.04 LTS :
 
-## License
+1. Fisrt, reinstall all dependencies : 
 
+		 sudo apt install astyle cmake gcc ninja-build libssl-dev python3-pytest python3-pytest-xdist unzip xsltproc doxygen graphviz python3-yaml valgrind
+
+2. Then go to the liboqs folder and run `ninja install`.
