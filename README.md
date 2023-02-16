@@ -19,3 +19,5 @@ This library was coded on Ubuntu 22.04 LTS :
 3. Go to ./ and create a folder ./exe
 
 4. Run `make`.
+
+5. Go to the ./exe folder and here you can run the 5 different benchmarks.
